@@ -1,18 +1,18 @@
 services:
-  traefik:
-    image: "traefik:v3.0"
-    command:
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.metrics.address=:8082"
-      - "--metrics.prometheus=true"
-      - "--metrics.prometheus.entryPoint=metrics"
-    ports:
-      - "80:80"
-      - "8082:8082"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+#  traefik:
+#    image: "traefik:v3.0"
+#    command:
+#      - "--providers.docker=true"
+#      - "--providers.docker.exposedbydefault=false"
+#      - "--entrypoints.web.address=:80"
+#      - "--entrypoints.metrics.address=:8082"
+#      - "--metrics.prometheus=true"
+#      - "--metrics.prometheus.entryPoint=metrics"
+#    ports:
+#      - "80:80"
+#      - "8082:8082"
+#    volumes:
+#      - "/var/run/docker.sock:/var/run/docker.sock:ro"
   app:
     # set container name app
     container_name: app
@@ -33,9 +33,10 @@ services:
       DB_PASSWORD: app_password
     depends_on:
       - db
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.app.rule=HostRegexp(`.*`)"
+
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.app.rule=HostRegexp(`.*`)"
   db:
     image: mysql:8.0
     restart: unless-stopped
