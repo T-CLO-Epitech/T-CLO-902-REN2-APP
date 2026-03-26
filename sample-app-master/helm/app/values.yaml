@@ -1,0 +1,35 @@
+replicaCount: 2
+
+image:
+  repository: "my-org/my-app"
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+containerPort: 80
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: ""
+      paths:
+        - path: /
+          pathType: Prefix
+
+env:
+  DB_HOST: ""
+  DB_USER: ""
+  DB_PASSWORD: ""
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

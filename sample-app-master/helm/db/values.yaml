@@ -1,0 +1,14 @@
+auth:
+  rootPassword: rootpassword
+  database: myapp
+  username: myuser
+  password: mypassword
+
+primary:
+  persistence:
+    enabled: true
+    size: 5Gi
+
+service:
+  port: 3306
+
