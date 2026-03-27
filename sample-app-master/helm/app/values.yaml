@@ -1,0 +1,38 @@
+replicaCount: 1
+
+image:
+  repository: "roronoha69/sample-app-master"
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+containerPort: 80
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: ""
+      paths:
+        - path: /
+          pathType: Prefix
+
+env:
+  DB_CONNECTION: mysql
+  DB_HOST: "mysql"
+  DB_PORT: 3306
+  DB_DATABASE: "myapp"
+  DB_USERNAME: "myuser"
+  DB_PASSWORD: "mypassword"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
