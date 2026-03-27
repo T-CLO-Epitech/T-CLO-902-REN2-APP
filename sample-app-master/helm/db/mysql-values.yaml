@@ -1,0 +1,29 @@
+## Values for the official Helm chart `groundhog2k/mysql`
+## Repo: https://groundhog2k.github.io/helm-charts/
+
+service:
+  type: ClusterIP
+  port: 3306
+
+settings:
+  rootPassword:
+    value: rootpassword
+
+userDatabase:
+  name:
+    value: myapp
+  user:
+    value: myuser
+  password:
+    value: mypassword
+
+storage:
+  requestedSize: 8Gi
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi

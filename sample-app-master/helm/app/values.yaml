@@ -1,7 +1,7 @@
-replicaCount: 2
+replicaCount: 1
 
 image:
-  repository: "my-org/my-app"
+  repository: "roronoha69/sample-app-master"
   tag: "latest"
   pullPolicy: IfNotPresent
 
@@ -22,9 +22,12 @@ ingress:
           pathType: Prefix
 
 env:
-  DB_HOST: ""
-  DB_USER: ""
-  DB_PASSWORD: ""
+  DB_CONNECTION: mysql
+  DB_HOST: "mysql"
+  DB_PORT: 3306
+  DB_DATABASE: "myapp"
+  DB_USERNAME: "myuser"
+  DB_PASSWORD: "mypassword"
 
 resources:
   requests:
