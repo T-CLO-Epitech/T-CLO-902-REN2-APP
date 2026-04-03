@@ -1,9 +1,38 @@
-replicaCount: 1
+replicaCount: 2
+
+imagePullSecrets:
+  - name: nexus-registry
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: role
+              operator: In
+              values:
+                - kube1
+                - kube2
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            app: sample-app
+        topologyKey: kubernetes.io/hostname
+
+tolerations:
+  - key: "role"
+    operator: "Equal"
+    value: "kube2"
+    effect: "NoSchedule"
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Exists"
+    effect: "NoSchedule"
 
 image:
   repository: "51.178.52.51:8019/sample-app"
   tag: "latest"
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 containerPort: 80
 
@@ -11,28 +40,17 @@ service:
   type: ClusterIP
   port: 80
 
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-  hosts:
-    - host: ""
-      paths:
-        - path: /
-          pathType: Prefix
+ingressRoute:
+  host: app.kubequest.local
 
 env:
   DB_CONNECTION: mysql
   DB_HOST: "mysql"
-  DB_PORT: 3306
+  DB_PORT: "3306"
   DB_DATABASE: "myapp"
   DB_USERNAME: "myuser"
   DB_PASSWORD: "mypassword"
 
 resources:
   requests:
-    cpu: 100m
-    memory: 128Mi
-  limits:
-    cpu: 500m
-    memory: 512Mi
+    cpu
