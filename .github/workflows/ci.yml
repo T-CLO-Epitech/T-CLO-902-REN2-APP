@@ -1,0 +1,44 @@
+on:
+  pull_request:
+
+jobs:
+  lint:
+    name: 🧪 Helm Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.14.0
+      - name: Lint all charts
+        run: |
+          helm lint sample-app-master/helm/app --strict
+
+  docker:
+    name: 🐳 Build & Push Docker Image
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Allow insecure registry
+        run: |
+          sudo tee /etc/docker/daemon.json <<EOF
+          { "insecure-registries": ["51.178.52.51:8019"] }
+          EOF
+          sudo systemctl restart docker
+
+      - name: Login to Nexus Registry
+        run: |
+          echo "${{ secrets.NEXUS_PASSWORD }}" | docker login 51.178.52.51:8019 -u "${{ secrets.NEXUS_USERNAME }}" --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build -t 51.178.52.51:8019/sample-app:latest sample-app-master/
+
+      - name: Push Docker image
+        run: |
+          docker push 51.178.52.51:8019/sample-app:latest
