@@ -13,6 +13,7 @@ affinity:
               values:
                 - kube1
                 - kube2
+
   podAntiAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
       - labelSelector:
