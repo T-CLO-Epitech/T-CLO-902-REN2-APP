@@ -17,12 +17,18 @@ jobs:
           helm lint sample-app-master/helm/app --strict
 
   docker:
-    name: 🐳 Build & Push Docker Image
+    name:  Build & Push Docker Image
     runs-on: ubuntu-latest
     needs: lint
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Allow insecure registry
         run: |
@@ -35,10 +41,8 @@ jobs:
         run: |
           echo "${{ secrets.NEXUS_PASSWORD }}" | docker login 51.178.52.51:8019 -u "${{ secrets.NEXUS_USERNAME }}" --password-stdin
 
-      - name: Build Docker image
+      - name: Build and push Docker image
         run: |
-          docker build -t 51.178.52.51:8019/sample-app:latest sample-app-master/
-
-      - name: Push Docker image
-        run: |
-          docker push 51.178.52.51:8019/sample-app:latest
+          docker buildx build --platform linux/arm64 \
+            -t 51.178.52.51:8019/sample-app:latest \
+            sample-app-master/ --push
