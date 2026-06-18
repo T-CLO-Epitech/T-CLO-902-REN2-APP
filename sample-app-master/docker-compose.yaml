@@ -22,22 +22,23 @@ services:
     ports:
       - "8081:80"
     environment:
-      APP_DEBUG: "true"
-      APP_ENV: "dev"
+      APP_DEBUG: "false"
+      APP_ENV: "production"
       APP_KEY: "base64:DJYTvaRkEZ/YcQsX3TMpB0iCjgme2rhlIOus9A1hnj4="
       DB_CONNECTION: mysql
-      DB_HOST: db
+      DB_HOST: mysql
       DB_PORT: 3306
       DB_DATABASE: app_database
       DB_USERNAME: app_user
       DB_PASSWORD: app_password
     depends_on:
-      - db
+      - mysql
 
 #    labels:
 #      - "traefik.enable=true"
 #      - "traefik.http.routers.app.rule=HostRegexp(`.*`)"
-  db:
+  mysql:
+    container_name: mysql
     image: mysql:8.0
     restart: unless-stopped
     command: --default-authentication-plugin=mysql_native_password
