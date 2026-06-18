@@ -3,6 +3,8 @@ replicaCount: 3
 imagePullSecrets:
   - name: nexus-registry
 
+podAnnotations: {}
+
 affinity:
   nodeAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
@@ -32,6 +34,25 @@ image:
   tag: "latest"
   pullPolicy: Always
 
+app:
+  env:
+    APP_ENV: "production"
+    APP_DEBUG: "false"
+    APP_URL: "http://app.kubequest.local"
+
+secrets:
+  existingSecret: app-secrets
+  keys:
+    appKey: APP_KEY
+    dbPassword: DB_PASSWORD
+
+database:
+  connection: mysql
+  host: mysql
+  port: 3306
+  name: app_database
+  username: app_user
+
 containerPort: 80
 
 service:
@@ -41,14 +62,6 @@ service:
 ingressRoute:
   host: app.kubequest.local
 
-env:
-  DB_CONNECTION: mysql
-  DB_HOST: "mysql"
-  DB_PORT: "3306"
-  DB_DATABASE: "myapp"
-  DB_USERNAME: "myuser"
-  DB_PASSWORD: "mypassword"
-
 resources:
   requests:
     cpu: 100m
@@ -57,6 +70,31 @@ resources:
     cpu: 500m
     memory: 512Mi
 
+probes:
+  startup:
+    path: /healthz
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 2
+    failureThreshold: 18
+  liveness:
+    path: /healthz
+    initialDelaySeconds: 15
+    periodSeconds: 10
+    timeoutSeconds: 2
+    failureThreshold: 3
+  readiness:
+    path: /readyz
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 2
+    failureThreshold: 6
+
 podDisruptionBudget:
   enabled: true
   minAvailable: 2
+
+migrationJob:
+  enabled: true
+  backoffLimit: 6
+  ttlSecondsAfterFinished: 300
