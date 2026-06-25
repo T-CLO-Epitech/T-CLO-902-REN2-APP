@@ -14,6 +14,10 @@ class CounterSeeder extends Seeder
      */
     public function run()
     {
+        if (Counter::query()->exists()) {
+            return;
+        }
+
         Counter::factory()
             ->count(10)
             ->create();
