@@ -24,13 +24,13 @@ secrets:
   keys:
     appKey: APP_KEY
     dbPassword: DB_PASSWORD
+    dbUsername: DB_USERNAME
 
 database:
   connection: mysql
   host: mysql
   port: 3306
   name: app_database
-  username: app_user
 
 containerPort: 80
 
